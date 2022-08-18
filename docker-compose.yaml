@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  ffmpeg:
+    build:
+      context: ffmpeg
+      args:
+        - BASE_CONTAINER=jrottenberg/ffmpeg:4.4-alpine
+    tty: true
+    environment:
+      - SOURCE_URL=rtsp://admin:dt%4012345@42.112.222.2:5554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif
+    volumes:
+      - app-stream-data:/tmp/stream/
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: frontend
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+      - app-stream-data:/usr/app/stream
+    ports:
+      - 8080:80
+    depends_on:
+      - ffmpeg
+    restart: unless-stopped
+
+volumes:
+  app-stream-data:
