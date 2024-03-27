@@ -7,7 +7,7 @@ function App() {
   const playerRef = useRef<HTMLVideoElement>(null);
 
   const [url, setUrl] = useState<string>(
-    "source0/index.m3u8"
+    "/source0/index.m3u8"
   );
 
   return (
